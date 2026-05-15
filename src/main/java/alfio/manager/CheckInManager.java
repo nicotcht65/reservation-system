@@ -268,7 +268,20 @@ public class CheckInManager {
 
     public TicketCheckInStatusResult retrieveTicketStatus(String ticketIdentifier) {
         var ticket = ticketRepository.findByUUID(ticketIdentifier);
-        return new TicketCheckInStatusResult(ticket.getUuid(), ticket.getFirstName(), ticket.getLastName(), ticket.getStatus() == TicketStatus.CHECKED_IN ? ALREADY_CHECK_IN : OK_READY_TO_BE_CHECKED_IN);
+        CheckInStatus status;
+        switch (ticket.getStatus()) {
+            case CHECKED_IN:
+                status = ALREADY_CHECK_IN;
+                break;
+            case ACQUIRED:
+            case TO_BE_PAID:
+                status = OK_READY_TO_BE_CHECKED_IN;
+                break;
+            default:
+                status = INVALID_TICKET_STATE;
+                break;
+        }
+        return new TicketCheckInStatusResult(ticket.getUuid(), ticket.getFirstName(), ticket.getLastName(), status);
     }
 
     private TicketAndCheckInResult extractStatus(int eventId, Optional<Ticket> maybeTicket, String ticketIdentifier, Optional<String> ticketCode) {
