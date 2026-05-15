@@ -9,21 +9,21 @@ jobs:
             matrix:
                 postgresql: ['14','16']
         steps:
-            - uses: actions/checkout@v3
-            - uses: actions/cache@v3
+            - uses: actions/checkout@v4
+            - uses: actions/cache@v4
               with:
                   path: ~/.gradle/caches
                   key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
                   restore-keys: |
                       ${{ runner.os }}-gradle-
-            - uses: actions/cache@v3
+            - uses: actions/cache@v4
               with:
                   path: ~/.gradle/wrapper
                   key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradlew') }}
                   restore-keys: |
                       ${{ runner.os }}-gradlew-
             - name: Set up JDK 17
-              uses: actions/setup-java@v3
+              uses: actions/setup-java@v4
               with:
                   java-version: 17
                   distribution: temurin
@@ -31,7 +31,7 @@ jobs:
               run: ./gradlew build distribution jacocoTestReport -Dpgsql.version=${{ matrix.postgresql }}
             -   name: 'Upload Build'
                 if: ${{ github.repository == 'alfio-event/alf.io' && matrix.postgresql == '14'}}
-                uses: actions/upload-artifact@v3
+                uses: actions/upload-artifact@v4
                 with:
                     name: dist
                     path: build
@@ -43,15 +43,15 @@ jobs:
         name: Push dev image
         steps:
             - name: Download artifacts
-              uses: actions/download-artifact@v3
+              uses: actions/download-artifact@v4
               with:
                   name: dist
             -   name: Set up QEMU
-                uses: docker/setup-qemu-action@v2
+                uses: docker/setup-qemu-action@v3
             -   name: Configure Docker
-                uses: docker/setup-buildx-action@v2
+                uses: docker/setup-buildx-action@v3
             -   name: Login to Container Registry
-                uses: docker/login-action@v2
+                uses: docker/login-action@v3
                 with:
                     registry: ghcr.io
                     username: ${{ secrets.CR_USER }}
@@ -59,7 +59,7 @@ jobs:
             -   name: Inject slug/short variables
                 uses: rlespinasse/github-slug-action@v4
             -   name: Push Docker image
-                uses: docker/build-push-action@v4
+                uses: docker/build-push-action@v5
                 with:
                     context: ./dockerize
                     tags: |
@@ -73,27 +73,27 @@ jobs:
         name: Push PROD image
         steps:
             -   name: Download artifacts
-                uses: actions/download-artifact@v3
+                uses: actions/download-artifact@v4
                 with:
                     name: dist
             -   name: Set up QEMU
-                uses: docker/setup-qemu-action@v2
+                uses: docker/setup-qemu-action@v3
             -   name: Configure Docker
-                uses: docker/setup-buildx-action@v2
+                uses: docker/setup-buildx-action@v3
             -   name: Login to Container Registry (GitHub)
-                uses: docker/login-action@v2
+                uses: docker/login-action@v3
                 with:
                     registry: ghcr.io
                     username: ${{ secrets.CR_USER }}
                     password: ${{ secrets.CR_PAT }}
             -   name: Login to Container Registry (Docker)
-                uses: docker/login-action@v2
+                uses: docker/login-action@v3
                 with:
                     registry: docker.io
                     username: ${{ secrets.DOCKER_USERNAME }}
                     password: ${{ secrets.DOCKER_PASSWORD }}
             -   name: Push Docker image
-                uses: docker/build-push-action@v4
+                uses: docker/build-push-action@v5
                 with:
                     context: ./dockerize
                     tags: |
