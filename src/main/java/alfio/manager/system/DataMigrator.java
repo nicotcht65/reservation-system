@@ -240,6 +240,7 @@ public class DataMigrator {
         }
     }
 
+    @Transactional
     void fixStuckTickets(int eventId) {
         List<Integer> ticketIds = jdbc.queryForList("select a.id from ticket a, tickets_reservation b where a.event_id = :eventId and a.status in('PENDING','TO_BE_PAID') and a.tickets_reservation_id = b.id and b.status = 'CANCELLED'", new MapSqlParameterSource("eventId", eventId), Integer.class);
         if(!ticketIds.isEmpty()) {
@@ -251,6 +252,7 @@ public class DataMigrator {
         }
     }
 
+    @Transactional
     void fixCategoriesSize(EventAndOrganizationId event) {
         ticketCategoryRepository.findAllTicketCategories(event.getId()).stream()
             .filter(TicketCategory::isBounded)

@@ -40,7 +40,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.MapBindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 import java.time.ZonedDateTime;
 import java.util.*;

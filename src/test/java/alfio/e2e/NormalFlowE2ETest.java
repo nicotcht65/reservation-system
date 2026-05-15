@@ -158,7 +158,7 @@ class NormalFlowE2ETest extends BaseIntegrationTest {
             var driver = browserWebDriver.driver;
             try {
                 driver.navigate().to(eventUrl);
-                WebDriverWait wait = new WebDriverWait(driver, 10);
+                WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(10));
                 wait.until(presenceOfElementLocated(By.cssSelector("div.markdown-content")));
                 page1TicketSelection(browserWebDriver);
                 //wait until page is loaded
@@ -169,7 +169,7 @@ class NormalFlowE2ETest extends BaseIntegrationTest {
                 wait.until(presenceOfElementLocated(By.cssSelector("h2[translate='reservation-page.title']")));
                 //
                 page3Payment(browserWebDriver, wait);
-                WebElement fourthPageElem = new WebDriverWait(driver, 30).until(presenceOfElementLocated(By.cssSelector("div.attendees-data")));
+                WebElement fourthPageElem = new WebDriverWait(driver, java.time.Duration.ofSeconds(30)).until(presenceOfElementLocated(By.cssSelector("div.attendees-data")));
                 Assertions.assertNotNull(fourthPageElem);
             } finally {
                 driver.quit();

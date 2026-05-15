@@ -37,7 +37,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.net.http.HttpClient;
@@ -71,7 +71,7 @@ public class BaseTestConfiguration {
     @Profile("!travis")
     public RefreshableDataSource dataSource() {
         String POSTGRES_DB = "alfio";
-        String postgresVersion = Objects.requireNonNullElse(System.getProperty("pgsql.version"), "9.6");
+        String postgresVersion = Objects.requireNonNullElse(System.getProperty("pgsql.version"), "14");
         log.debug("Running tests using PostgreSQL v.{}", postgresVersion);
         if (postgres == null) {
             postgres = new PostgreSQLContainer<>("postgres:"+postgresVersion)

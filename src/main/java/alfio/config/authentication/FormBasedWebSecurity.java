@@ -20,11 +20,14 @@ import alfio.manager.RecaptchaService;
 import alfio.manager.openid.PublicOpenIdAuthenticationManager;
 import alfio.manager.system.ConfigurationManager;
 import alfio.manager.user.UserManager;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 
@@ -55,5 +58,11 @@ public class FormBasedWebSecurity extends AbstractFormBasedWebSecurity {
             passwordEncoder,
             publicOpenIdAuthenticationManager,
             sessionRegistry);
+    }
+
+    @Bean
+    @Order(1)
+    public SecurityFilterChain formBasedFilterChain(HttpSecurity http) throws Exception {
+        return configureHttpSecurity(http);
     }
 }

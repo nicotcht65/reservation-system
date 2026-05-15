@@ -7,7 +7,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                postgresql: ['9.6','14']
+                postgresql: ['14','16']
         steps:
             - uses: actions/checkout@v3
             - uses: actions/cache@v3
@@ -22,15 +22,15 @@ jobs:
                   key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradlew') }}
                   restore-keys: |
                       ${{ runner.os }}-gradlew-
-            - name: Set up JDK 11
+            - name: Set up JDK 17
               uses: actions/setup-java@v3
               with:
-                  java-version: 11
+                  java-version: 17
                   distribution: temurin
             - name: Build with Gradle
               run: ./gradlew build distribution jacocoTestReport -Dpgsql.version=${{ matrix.postgresql }}
             -   name: 'Upload Build'
-                if: ${{ github.repository == 'alfio-event/alf.io' && matrix.postgresql == '9.6'}}
+                if: ${{ github.repository == 'alfio-event/alf.io' && matrix.postgresql == '14'}}
                 uses: actions/upload-artifact@v3
                 with:
                     name: dist

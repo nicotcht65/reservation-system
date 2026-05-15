@@ -31,7 +31,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
 import org.springframework.session.security.SpringSessionBackedSessionRegistry;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -118,10 +118,8 @@ public class MvcConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
-    public CommonsMultipartResolver multipartResolver() {
-        var multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(500_000); // 500kB
-        return multipartResolver;
+    public StandardServletMultipartResolver multipartResolver() {
+        return new StandardServletMultipartResolver();
     }
 
     @Bean
