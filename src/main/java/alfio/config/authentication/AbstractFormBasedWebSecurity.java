@@ -41,6 +41,7 @@ import org.springframework.security.web.authentication.AnonymousAuthenticationFi
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
@@ -97,6 +98,7 @@ abstract class AbstractFormBasedWebSecurity {
     protected SecurityFilterChain configureHttpSecurity(HttpSecurity http) throws Exception {
 
         AuthenticationManager authManager = buildAuthenticationManager();
+        http.authenticationManager(authManager);
 
         if (environment.acceptsProfiles(Profiles.of("!" + Initializer.PROFILE_DEV))) {
             http.requiresChannel(channel -> channel
@@ -150,7 +152,8 @@ abstract class AbstractFormBasedWebSecurity {
             ADMIN_API + "/reservation/subscription/**"
         };
 
-        configurer.csrfTokenRepository(csrfTokenRepository);
+        configurer.csrfTokenRepository(csrfTokenRepository)
+            .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler());
 
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(ant(ADMIN_PUBLIC_API + "/**")).denyAll()
